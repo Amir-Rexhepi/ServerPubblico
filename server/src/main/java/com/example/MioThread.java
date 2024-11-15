@@ -18,26 +18,34 @@ public class MioThread extends Thread{
        try{
         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             DataOutputStream out = new DataOutputStream(s.getOutputStream());
+            String nome = in.readLine();
+                if(nome.equals(" ")){
+                    out.writeBytes("Metti un username," + "\n");
+                }else{
+                    l.aggiuntaContanti(nome);
+                    out.writeBytes();
+                    
+                }
+            l.visualizzaContatti();
             do{
                 /* Controllo */ 
-                String nome = in.readLine();
-                l.aggiuntaContanti(nome);
-                out.writeBytes("MEUNU");
                 /*Menu Principale */
                 String menuP = in.readLine();
+                System.out.println(menuP);
                 switch (menuP) {
                     case "PRIVATO":
                     //Si entra nel ramo contatto singolo
-                         out.writeBytes("PRIV");
+                    System.out.println("Privato");
+                         out.writeBytes("PRIV" + "\n");
                         break;
                 
                     case "PUBBLICO":
                     //si entra nel ramo gruppo
-                    out.writeBytes("PUBBL");
+                    out.writeBytes("PUBBL" + "\n");
                         break;
                     case "DISCONETTI":
                     //si disconnette il client 
-                    out.writeBytes("EXIT");
+                    out.writeBytes("EXIT" + "\n");
                     break;
                 } 
 
@@ -45,17 +53,17 @@ public class MioThread extends Thread{
                 /*MENU PUBLIC */
                 switch (scelta) {
                     case "LISTA_PUBBL":
-                       out.writeBytes("LISTA_GRUPPI");
+                       out.writeBytes("LISTA_GRUPPI:" + "\n");
                         break;
                 
                     case "SCELTA_PUBBLIC":
-                        out.writeBytes("SCELTA_GRUPPO");
+                        out.writeBytes("SCELTA_GRUPPO" + "\n");
                         break;
                     case "MENUCHAT":
                         out.writeBytes("MENU" + "\n");
                        break;
                 }
-                /*MENU SE È STATO SCELTO ALTRO */
+                  /*MENU SE È STATO SCELTO ALTRO */
                 String sceltaG = in.readLine();
                 switch (sceltaG) {
 
@@ -65,12 +73,7 @@ public class MioThread extends Thread{
                 
                     case "SCRIVI_GURPPO":
                      /*gestisco con un array */
-                        if(scelta.equals("CIAO")){
-                            /*entra nel gruppo e puo messaggiare */
-
-                        }else{
-                            out.writeBytes("NON_CONNESSO");
-                        }
+        
                             
                         break;
                        }
@@ -83,7 +86,6 @@ public class MioThread extends Thread{
                     case "NON_VALIDO":
                         break;
                    }
-
             }while(true);
        }catch(Exception e){
           System.out.println("errore");

@@ -8,7 +8,7 @@ public class Lista {
     ArrayList<String> gruppo;
 
      public Lista(){
-        ArrayList<String> contatti = new ArrayList<String>();
+       contatti = new ArrayList<>();
      }
 
      public void aggiuntaContanti(String a) {
@@ -17,12 +17,14 @@ public class Lista {
 
         }else{
             System.out.println("nuova variabile aggiunta");
+            contatti.add(a);
         }
      }
      public void visualizzaContatti(){
         for(int i = 0; i<contatti.size(); i++ ){
-            System.out.println("");
+            System.out.println(contatti.get(i));
         }
+        System.out.println("ciao");
      }
 
 }

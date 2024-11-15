@@ -14,7 +14,6 @@ public class Main {
             System.out.println("Un Client si è appena connesso al server");
             MioThread t = new MioThread(s, l);
             t.start();
-            
         } while (true);
         
     }
