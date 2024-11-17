@@ -18,20 +18,20 @@ public class MioThread extends Thread{
        try{
         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             DataOutputStream out = new DataOutputStream(s.getOutputStream());
+            out.writeBytes("Inserisci un username prima di chattare");
             String nome = in.readLine();
                 if(nome.equals(" ")){
-                    out.writeBytes("Metti un username," + "\n");
+                    out.writeBytes("Metti un username valido" + "\n");
                 }else{
                     l.aggiuntaContanti(nome);
-                    out.writeBytes();
+                    out.writeBytes( "Menu");
                     
                 }
-            l.visualizzaContatti();
-            do{
+                l.visualizzaContatti();
+            
                 /* Controllo */ 
                 /*Menu Principale */
                 String menuP = in.readLine();
-                System.out.println(menuP);
                 switch (menuP) {
                     case "PRIVATO":
                     //Si entra nel ramo contatto singolo
@@ -47,13 +47,13 @@ public class MioThread extends Thread{
                     //si disconnette il client 
                     out.writeBytes("EXIT" + "\n");
                     break;
-                } 
+                }
 
                 String scelta = in.readLine();
                 /*MENU PUBLIC */
                 switch (scelta) {
                     case "LISTA_PUBBL":
-                       out.writeBytes("LISTA_GRUPPI:" + "\n");
+                       out.writeBytes( l.visualizzaGruppi() + "\n");
                         break;
                 
                     case "SCELTA_PUBBLIC":
@@ -63,18 +63,14 @@ public class MioThread extends Thread{
                         out.writeBytes("MENU" + "\n");
                        break;
                 }
-                  /*MENU SE È STATO SCELTO ALTRO */
+
+                /*MENU SE È STATO SCELTO ALTRO */
                 String sceltaG = in.readLine();
                 switch (sceltaG) {
-
                     case "INDIETRO":
                          
                         break;
-                
                     case "SCRIVI_GURPPO":
-                     /*gestisco con un array */
-        
-                            
                         break;
                        }
                 String scletaF = in.readLine();
@@ -86,7 +82,7 @@ public class MioThread extends Thread{
                     case "NON_VALIDO":
                         break;
                    }
-            }while(true);
+           
        }catch(Exception e){
           System.out.println("errore");
        }

@@ -10,9 +10,8 @@ public class Main {
         Lista l = new Lista();
 
         do {
-            Socket s = ss.accept();
+            MioThread t = new MioThread(ss.accept, l);
             System.out.println("Un Client si è appena connesso al server");
-            MioThread t = new MioThread(s, l);
             t.start();
         } while (true);
         
