@@ -5,86 +5,94 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class MioThread extends Thread{
+public class MioThread extends Thread {
     Socket s;
     Lista l;
 
-    public MioThread(Socket s, Lista l){
-        this.s =  s;
+    public MioThread(Socket s, Lista l) {
+        this.s = s;
         this.l = l;
     }
 
-    public void run(){
-       try{
-        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+    public void run() {
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             DataOutputStream out = new DataOutputStream(s.getOutputStream());
-            out.writeBytes("Inserisci un username prima di chattare");
-            String nome = in.readLine();
-                if(nome.equals(" ")){
+
+            boolean connessione = true;
+
+             do {
+                out.writeBytes("Inserisci un username prima di chattare" + "\n");
+           
+                String nome = in.readLine();
+                if (nome.isEmpty()) {
                     out.writeBytes("Metti un username valido" + "\n");
-                }else{
-                    l.aggiuntaContanti(nome);
-                    out.writeBytes( "Menu");
-                    
                 }
-                l.visualizzaContatti();
-            
-                /* Controllo */ 
-                /*Menu Principale */
+                else {
+                 if( l.aggiuntaContanti(nome))
+                 {
+                    out.writeBytes("MENU" + "\n");
+                    break;
+                 }else{
+                    out.writeBytes("Username gia esistente" + "\n");
+                 }
+                 
+                }
+            } while (true);
+            l.visualizzaContatti();
+
+            /* Controllo */
+            /* Menu Principale */
+            do {
+
                 String menuP = in.readLine();
                 switch (menuP) {
                     case "PRIVATO":
-                    //Si entra nel ramo contatto singolo
-                    System.out.println("Privato");
-                         out.writeBytes("PRIV" + "\n");
+                        // Si entra nel ramo contatto singolo
+                        System.out.println("Privato");
+                        out.writeBytes("PRIV" + "\n");
                         break;
-                
+
                     case "PUBBLICO":
-                    //si entra nel ramo gruppo
-                    out.writeBytes("PUBBL" + "\n");
-                        break;
+                        // si entra nel ramo gruppo
+                        out.writeBytes("PUBBL" + "\n");
+                        do{
+                        String scelta = in.readLine();
+                        /* MENU PUBLIC */
+                        switch (scelta) {
+                            case "LISTA_PUBBL":
+
+                                if (l.contatto.isEmpty()) {
+                                    out.writeBytes("VUOTO" + "\n");
+                                } else {
+                                    for (String i : l.contatto) {
+                                        out.writeBytes(i + "\n");
+                                    }
+                                    out.writeBytes("VUOTO" + "\n");
+                                }
+
+                                break;
+
+                            case "SCRIVI_PUBBLIC":
+                                out.writeBytes("Digita un messaggio da mandare a tutti gli altri utenti" + "\n");
+                                /* MENU SE È STATO SCELTO ALTRO */
+                                
+                                break;
+                            case "MENUCHAT":
+                                out.writeBytes("MENU" + "\n");
+                                break;
+                        }
+                    }while (true);
                     case "DISCONETTI":
-                    //si disconnette il client 
-                    out.writeBytes("EXIT" + "\n");
-                    break;
+                        // si disconnette il client
+                        out.writeBytes("EXIT" + "\n");
+                        //username + s.close
+                        break;
                 }
-
-                String scelta = in.readLine();
-                /*MENU PUBLIC */
-                switch (scelta) {
-                    case "LISTA_PUBBL":
-                       out.writeBytes( l.visualizzaGruppi() + "\n");
-                        break;
-                
-                    case "SCELTA_PUBBLIC":
-                        out.writeBytes("SCELTA_GRUPPO" + "\n");
-                        break;
-                    case "MENUCHAT":
-                        out.writeBytes("MENU" + "\n");
-                       break;
-                }
-
-                /*MENU SE È STATO SCELTO ALTRO */
-                String sceltaG = in.readLine();
-                switch (sceltaG) {
-                    case "INDIETRO":
-                         
-                        break;
-                    case "SCRIVI_GURPPO":
-                        break;
-                       }
-                String scletaF = in.readLine();
-                   switch (scletaF) {
-                    case "MESSAGGIO":
-                        
-                        break;
-                   
-                    case "NON_VALIDO":
-                        break;
-                   }
-           
-       }catch(Exception e){
-          System.out.println("errore");
-       }
+            } while (connessione);
+        } catch (Exception e) {
+            System.out.println("client disconesso");
+        }
     }
+    
 }
