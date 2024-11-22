@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class MioThread extends Thread {
     Socket s;
@@ -18,14 +19,14 @@ public class MioThread extends Thread {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             DataOutputStream out = new DataOutputStream(s.getOutputStream());
-
             boolean connessione = true;
-
+            //possibile errore
+            out.writeBytes("Inserisci un username prima di chattare" + "\n");
+            String nome = in.readLine();
              do {
-                out.writeBytes("Inserisci un username prima di chattare" + "\n");
-           
-                String nome = in.readLine();
-                if (nome.isEmpty()) {
+                
+
+               if (nome.isEmpty()) {
                     out.writeBytes("Metti un username valido" + "\n");
                 }
                 else {
@@ -39,12 +40,9 @@ public class MioThread extends Thread {
                  
                 }
             } while (true);
-            l.visualizzaContatti();
-
             /* Controllo */
             /* Menu Principale */
             do {
-
                 String menuP = in.readLine();
                 switch (menuP) {
                     case "PRIVATO":
@@ -75,8 +73,21 @@ public class MioThread extends Thread {
 
                             case "SCRIVI_PUBBLIC":
                                 out.writeBytes("Digita un messaggio da mandare a tutti gli altri utenti" + "\n");
-                                /* MENU SE È STATO SCELTO ALTRO */
-                                
+                                String[] messaggio = new String[100];
+                                while (true) {
+                                    String leggi = in.readLine();
+                                    if(leggi.equals("@")){
+                                        break;
+                                    }else{
+                                    for(int i = 0; i<messaggio.length; i++){
+                                            messaggio[i] = leggi;
+                                        out.writeBytes("Ok" + "\n");
+                                       }
+                                    }
+                                }
+                                String messaggi = String.join(" ", messaggio);
+                                out.writeBytes( messaggi + "\n");
+                                out.writeBytes(nome + messaggi + "\n");;
                                 break;
                             case "MENUCHAT":
                                 out.writeBytes("MENU" + "\n");
@@ -85,8 +96,8 @@ public class MioThread extends Thread {
                     }while (true);
                     case "DISCONETTI":
                         // si disconnette il client
-                        out.writeBytes("EXIT" + "\n");
-                        //username + s.close
+                        s.close();
+                        out.writeBytes(nome +" si è disconesso" + "\n");
                         break;
                 }
             } while (connessione);
